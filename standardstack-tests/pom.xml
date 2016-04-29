@@ -42,12 +42,19 @@
         <dependency>
             <groupId>org.jbehave.site</groupId>
             <artifactId>jbehave-site-resources</artifactId>
-            <version>${jbehave-site-resources.version}</version>
             <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.jbehave</groupId>
+            <artifactId>jbehave-spring</artifactId>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
         </dependency>
     </dependencies>
     <build>
@@ -65,10 +72,9 @@
                             <goal>unpack-view-resources</goal>
                         </goals>
                         <configuration>
-                            <scope>test</scope>
                             <storyTimeoutInSecs>1</storyTimeoutInSecs>
                             <includes>
-                                <include>**/*Story.java</include>
+                                <include>**/stories/*</include>
                             </includes>
                             <ignoreFailureInStories>false</ignoreFailureInStories>
                             <ignoreFailureInView>false</ignoreFailureInView>
@@ -81,6 +87,12 @@
                         </configuration>
                     </execution>
                 </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-starter-logging</artifactId>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>

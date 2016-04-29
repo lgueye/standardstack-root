@@ -7,11 +7,11 @@ So that I can limit toxic registrations
 
 Scenario: draft account should be persisted properly
 Given visitor <email> intends to register with the following information:
-|firstName|lastName|
+|first_name|last_name|
 |awesome  |visitor |
 When visitor <email> registers
 Then visitor <email> draft account is persisted with the following information:
-|firstName|lastName|
+|first_name|last_name|
 |awesome  |visitor |
 And visitor <email> gets the following token <token> to confirm registration
   
