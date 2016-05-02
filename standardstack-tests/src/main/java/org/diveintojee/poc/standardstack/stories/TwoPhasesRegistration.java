@@ -5,5 +5,5 @@ import org.diveintojee.poc.standardstack.AbstractJUnitStory;
 /**
  * @author louis.gueye@gmail.com
  */
-public class TwoPhasesRegistrationStory extends AbstractJUnitStory {
+public class TwoPhasesRegistration extends AbstractJUnitStory {
 }
