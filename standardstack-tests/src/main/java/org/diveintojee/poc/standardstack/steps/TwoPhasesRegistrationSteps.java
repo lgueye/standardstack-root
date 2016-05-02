@@ -1,5 +1,8 @@
 package org.diveintojee.poc.standardstack.steps;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.util.List;
 
 import org.jbehave.core.annotations.Given;
@@ -8,6 +11,7 @@ import org.jbehave.core.annotations.Then;
 import org.jbehave.core.annotations.When;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -15,32 +19,45 @@ public class TwoPhasesRegistrationSteps {
 
 	private static final Logger LOG = LoggerFactory.getLogger(TwoPhasesRegistrationSteps.class);
 
+	private Registration registration;
+	private Account account;
+
+	@Autowired
+	private StandardApi standardApi;
+
 	@Given("visitor $email intends to register with the following information: $rows")
-	@Pending
-	public void buildProfile(String email, List<AccountRow> accountRows) {
+	public void buildProfile(String email, List<Registration> rows) {
 		LOG.debug("Building profile for account {}", email);
-		throw new UnsupportedOperationException();
+		registration = rows.iterator().next();
 	}
 
-	@When("visitor <email> registers")
-	@Pending
+	@When("visitor $email registers")
 	public void register(String email) {
-		LOG.debug("Running registration process for account {}", email);
-		throw new UnsupportedOperationException();
+		LOG.debug("Running registration process for account {} and details {}", email, registration);
+		registration.setEmail(email);
+		registration = standardApi.register(registration);
 	}
 
-	@Then("visitor $email draft account is persisted with the following information: $rows")
+	@Then("visitor $email registration is properly persisted")
 	@Pending
-	public void profileIsPersisted(String email, List<AccountRow> accountRows) {
-		LOG.debug("Account {} was properly persisted", email);
-		throw new UnsupportedOperationException();
+	public void registrationIsPersisted(String email) {
+		assertEquals(registration, standardApi.loadRegistration(email));
+		LOG.debug("Registration {} was properly persisted", email);
 	}
 
-	@Then("visitor <email> gets the following token <token> to confirm registration")
+	@When("visitor $email confirms registration")
 	@Pending
-	public void confirmationTokenIsGenerated(String email, String token) {
-		LOG.debug("Confirmation token {} was generated for account {}", token, email);
-		throw new UnsupportedOperationException();
+	public void confirmRegistration(String email) {
+		LOG.debug("Confirming registration process for account {}", email);
+		account = standardApi.confirmRegistration(email);
 	}
+
+	@Then("visitor $email account is active")
+	@Pending
+	public void accountIsActive(String email) {
+		assertTrue(account.isActive());
+		LOG.debug("Account {} is active", email);
+	}
+
 
 }

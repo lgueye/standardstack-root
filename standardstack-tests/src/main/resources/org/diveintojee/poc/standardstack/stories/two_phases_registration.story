@@ -8,13 +8,12 @@ So that I can limit toxic registrations
 Scenario: draft account should be persisted properly
 Given visitor <email> intends to register with the following information:
 |first_name|last_name|
-|awesome  |visitor |
+|awesome   |visitor  |
 When visitor <email> registers
-Then visitor <email> draft account is persisted with the following information:
-|first_name|last_name|
-|awesome  |visitor |
-And visitor <email> gets the following token <token> to confirm registration
-  
+Then visitor <email> registration is properly persisted
+When visitor <email> confirms registration
+Then visitor <email> account is active
+
 Examples:
-|<email>            |
+|email	            |
 |awesome@visitor.com|

@@ -1,7 +1,14 @@
 package org.diveintojee.poc.standardstack.steps;
 
-/**
- * Created by louis on 5/2/16.
- */
+import java.time.LocalDateTime;
+
 public class Account {
+	private String email;
+	private String firstName;
+	private String lastName;
+	private LocalDateTime created;
+	private LocalDateTime closed;
+	public boolean isActive() {
+		return created != null && created.isBefore(LocalDateTime.now()) && closed == null;
+	}
 }
