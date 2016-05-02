@@ -36,6 +36,33 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>run-api</id>
+                        <goals>
+                            <goal>start</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>org.diveintojee.poc.standardstack.StandardStackApplication</mainClass>
+                            <arguments>
+                                <argument>--server.context=standardstack-api</argument>
+                                <argument>--server.port=9090</argument>
+                                <argument>--management.port=9091</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.diveintojee.poc.standardstack</groupId>
+                        <artifactId>standardstack-api</artifactId>
+                        <version>${project.parent.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
                 <groupId>org.jbehave</groupId>
                 <artifactId>jbehave-maven-plugin</artifactId>
                 <version>${jbehave.version}</version>
