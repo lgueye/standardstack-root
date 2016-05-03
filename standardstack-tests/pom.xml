@@ -10,6 +10,10 @@
     <packaging>jar</packaging>
     <dependencies>
         <dependency>
+            <groupId>org.diveintojee.poc.standardstack</groupId>
+            <artifactId>standardstack-domain</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.jbehave</groupId>
             <artifactId>jbehave-core</artifactId>
         </dependency>
@@ -36,31 +40,35 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
+                <groupId>com.bazaarvoice.maven.plugins</groupId>
+                <artifactId>process-exec-maven-plugin</artifactId>
+                <version>0.7</version>
                 <executions>
                     <execution>
                         <id>run-api</id>
+                        <phase>pre-integration-test</phase>
                         <goals>
                             <goal>start</goal>
                         </goals>
                         <configuration>
-                            <mainClass>org.diveintojee.poc.standardstack.StandardStackApplication</mainClass>
+                            <name>standardstack-api</name>
+                            <workingDir>standardstack-api</workingDir>
+                            <waitForInterrupt>false</waitForInterrupt>
+                            <healthcheckUrl>http://localhost:9090/admin/health</healthcheckUrl>
                             <arguments>
-                                <argument>--server.context=standardstack-api</argument>
+                                <argument>java</argument>
+                                <argument>-jar</argument>
+                                <argument>${project.basedir}/../standardstack-api/target/standardstack-api-${project.parent.version}.jar</argument>
                                 <argument>--server.port=9090</argument>
+                                <argument>--server.context-path=standardstack</argument>
                                 <argument>--management.port=9091</argument>
+                                <argument>--token.retention.in.days=3</argument>
+                                <argument>--management.context-path=admin</argument>
+                                <argument>--spring.logging.config=${project.build.outputDirectory}/logback-standard-api.xml</argument>
                             </arguments>
                         </configuration>
                     </execution>
                 </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.diveintojee.poc.standardstack</groupId>
-                        <artifactId>standardstack-api</artifactId>
-                        <version>${project.parent.version}</version>
-                    </dependency>
-                </dependencies>
             </plugin>
             <plugin>
                 <groupId>org.jbehave</groupId>

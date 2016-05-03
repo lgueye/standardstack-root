@@ -1,26 +1,22 @@
-package org.diveintojee.poc.standardstack.steps;
+package org.diveintojee.poc.standardstack.domain;
 
 import java.time.LocalDateTime;
 
-import org.jbehave.core.annotations.AsParameters;
-import org.jbehave.core.annotations.Parameter;
+import com.google.common.base.MoreObjects;
 
-@AsParameters
 public class Registration {
-    private String tokenUrl;
+    private String token;
     private LocalDateTime expires;
     private String email;
-    @Parameter(name = "first_name")
     private String firstName;
-    @Parameter(name = "last_name")
     private String lastName;
 
-    public String getTokenUrl() {
-        return tokenUrl;
+    public String getToken() {
+        return token;
     }
 
-    public void setTokenUrl(String tokenUrl) {
-        this.tokenUrl = tokenUrl;
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public LocalDateTime getExpires() {
@@ -53,5 +49,11 @@ public class Registration {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this).add("token", token).add("expires", expires).add("email", email).add("firstName", firstName)
+                .add("lastName", lastName).toString();
     }
 }

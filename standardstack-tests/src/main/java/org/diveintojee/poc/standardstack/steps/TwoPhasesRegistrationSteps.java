@@ -1,5 +1,6 @@
 package org.diveintojee.poc.standardstack.steps;
 
+import org.diveintojee.poc.standardstack.domain.Account;
 import org.jbehave.core.annotations.Given;
 import org.jbehave.core.annotations.Pending;
 import org.jbehave.core.annotations.Then;

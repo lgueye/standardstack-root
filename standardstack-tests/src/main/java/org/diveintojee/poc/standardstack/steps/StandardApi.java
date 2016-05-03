@@ -1,5 +1,6 @@
 package org.diveintojee.poc.standardstack.steps;
 
+import org.diveintojee.poc.standardstack.domain.Account;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -19,12 +20,19 @@ public class StandardApi {
     @Autowired
     private RestTemplate api;
 
+    @Autowired
+    private DomainToTestRegistrationConverter domainToTestRegistrationConverter;
+    @Autowired
+    private TestToDomainRegistrationConverter testToDomainRegistrationConverter;
+
     public Registration register(Registration registration) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(APPLICATION_JSON);
-        final HttpEntity<Registration> request = new HttpEntity<>(registration, headers);
+        final HttpEntity<org.diveintojee.poc.standardstack.domain.Registration> request =
+                new HttpEntity<>(testToDomainRegistrationConverter.convert(registration), headers);
         URI location = api.postForLocation("http://localhost:9090/standardstack/api/registrations", request);
-        return loadByLocation(location, Registration.class);
+        return domainToTestRegistrationConverter.convert(
+                loadByLocation(location, org.diveintojee.poc.standardstack.domain.Registration.class));
     }
 
     public <T> T loadByLocation(URI uri, Class<T> clazz) {
@@ -40,9 +48,9 @@ public class StandardApi {
         headers.setAccept(singletonList(APPLICATION_JSON));
         HttpEntity<String> entity = new HttpEntity<>(headers);
         final String url = "http://localhost:9090/standardstack/api/registrations?email=" + email;
-        final ResponseEntity<Registration> responseEntity = api
-                .exchange(URI.create(url), HttpMethod.GET, entity, Registration.class);
-        return responseEntity.getBody();
+        final ResponseEntity<org.diveintojee.poc.standardstack.domain.Registration> responseEntity = api
+                .exchange(URI.create(url), HttpMethod.GET, entity, org.diveintojee.poc.standardstack.domain.Registration.class);
+        return domainToTestRegistrationConverter.convert(responseEntity.getBody());
     }
 
     public Account confirmRegistration(String email) {

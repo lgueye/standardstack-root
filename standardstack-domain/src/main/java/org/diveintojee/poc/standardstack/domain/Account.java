@@ -1,4 +1,4 @@
-package org.diveintojee.poc.standardstack.steps;
+package org.diveintojee.poc.standardstack.domain;
 
 import java.time.LocalDateTime;
 
