@@ -2,12 +2,13 @@ package org.diveintojee.poc.standardstack.steps;
 
 import java.time.LocalDateTime;
 
+import com.google.common.base.Objects;
 import org.jbehave.core.annotations.AsParameters;
 import org.jbehave.core.annotations.Parameter;
 
 @AsParameters
 public class Registration {
-    private String tokenUrl;
+    private String token;
     private LocalDateTime expires;
     private String email;
     @Parameter(name = "first_name")
@@ -15,12 +16,12 @@ public class Registration {
     @Parameter(name = "last_name")
     private String lastName;
 
-    public String getTokenUrl() {
-        return tokenUrl;
+    public String getToken() {
+        return token;
     }
 
-    public void setTokenUrl(String tokenUrl) {
-        this.tokenUrl = tokenUrl;
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public LocalDateTime getExpires() {
@@ -53,5 +54,21 @@ public class Registration {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Registration that = (Registration) o;
+        return Objects.equal(token, that.token) &&
+                Objects.equal(email, that.email) &&
+                Objects.equal(firstName, that.firstName) &&
+                Objects.equal(lastName, that.lastName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(token, email, firstName, lastName);
     }
 }

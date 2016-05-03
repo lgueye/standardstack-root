@@ -1,12 +1,13 @@
 package org.diveintojee.poc.standardstack.domain;
 
-import java.time.LocalDateTime;
-
 import com.google.common.base.MoreObjects;
+
+import java.time.LocalDateTime;
 
 public class Registration {
     private String token;
     private LocalDateTime expires;
+    private LocalDateTime archived;
     private String email;
     private String firstName;
     private String lastName;
@@ -51,9 +52,26 @@ public class Registration {
         this.lastName = lastName;
     }
 
+    public LocalDateTime getArchived() {
+        return archived;
+    }
+
+    public void setArchived(LocalDateTime archived) {
+        this.archived = archived;
+    }
+
     @Override
     public String toString() {
-        return MoreObjects.toStringHelper(this).add("token", token).add("expires", expires).add("email", email).add("firstName", firstName)
-                .add("lastName", lastName).toString();
+        return MoreObjects.toStringHelper(this)
+                .add("token", token)
+                .add("expires", expires)
+                .add("email", email)
+                .add("firstName", firstName)
+                .add("lastName", lastName)
+                .add("archived", archived).toString();
+    }
+
+    public void archive() {
+        setArchived(LocalDateTime.now());
     }
 }

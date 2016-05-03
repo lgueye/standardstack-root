@@ -13,7 +13,7 @@ public class TestToDomainRegistrationConverter implements Converter< Registratio
 		target.setExpires(source.getExpires());
 		target.setFirstName(source.getFirstName());
 		target.setLastName(source.getLastName());
-		target.setToken(source.getTokenUrl());
+		target.setToken(source.getToken());
 		return target;
 	}
 }

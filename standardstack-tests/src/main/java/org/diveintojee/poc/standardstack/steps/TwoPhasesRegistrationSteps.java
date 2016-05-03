@@ -40,21 +40,18 @@ public class TwoPhasesRegistrationSteps {
     }
 
     @Then("visitor $email registration is properly persisted")
-    @Pending
     public void registrationIsPersisted(String email) {
         assertEquals(registration, standardApi.loadRegistrationByEmail(email));
         LOG.debug("Registration {} was properly persisted", email);
     }
 
     @When("visitor $email confirms registration")
-    @Pending
     public void confirmRegistration(String email) {
         LOG.debug("Confirming registration process for account {}", email);
         account = standardApi.confirmRegistration(email);
     }
 
     @Then("visitor $email account is active")
-    @Pending
     public void accountIsActive(String email) {
         assertTrue(account.isActive());
         LOG.debug("Account {} is active", email);

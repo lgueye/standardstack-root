@@ -54,8 +54,9 @@ public class StandardApi {
     }
 
     public Account confirmRegistration(String email) {
-        URI location = api.postForLocation(URI.create(loadRegistrationByEmail(email).getTokenUrl()),
-                new HttpEntity<>(new HttpHeaders()));
+        final String token = loadRegistrationByEmail(email).getToken();
+        final String url = "http://localhost:9090/standardstack/api/registrations/" + token;
+        URI location = api.postForLocation(url, new HttpEntity<>(new HttpHeaders()));
         return loadByLocation(location, Account.class);
     }
 }

@@ -36,6 +36,10 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -52,18 +56,19 @@
                         </goals>
                         <configuration>
                             <name>standardstack-api</name>
-                            <workingDir>standardstack-api</workingDir>
+                            <waitAfterLaunch></waitAfterLaunch>
+                            <!--<workingDir>standardstack-api</workingDir>-->
                             <waitForInterrupt>false</waitForInterrupt>
-                            <healthcheckUrl>http://localhost:9090/admin/health</healthcheckUrl>
+                            <!--<healthcheckUrl>http://localhost:9090/admin/health</healthcheckUrl>-->
                             <arguments>
                                 <argument>java</argument>
                                 <argument>-jar</argument>
                                 <argument>${project.basedir}/../standardstack-api/target/standardstack-api-${project.parent.version}.jar</argument>
                                 <argument>--server.port=9090</argument>
-                                <argument>--server.context-path=standardstack</argument>
+                                <argument>--server.context-path=/standardstack</argument>
                                 <argument>--management.port=9091</argument>
                                 <argument>--token.retention.in.days=3</argument>
-                                <argument>--management.context-path=admin</argument>
+                                <!--<argument>&#45;&#45;management.context-path=/admin</argument>-->
                                 <argument>--spring.logging.config=${project.build.outputDirectory}/logback-standard-api.xml</argument>
                             </arguments>
                         </configuration>
