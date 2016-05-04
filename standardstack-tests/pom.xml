@@ -56,10 +56,8 @@
                         </goals>
                         <configuration>
                             <name>standardstack-api</name>
-                            <waitAfterLaunch></waitAfterLaunch>
-                            <!--<workingDir>standardstack-api</workingDir>-->
                             <waitForInterrupt>false</waitForInterrupt>
-                            <!--<healthcheckUrl>http://localhost:9090/admin/health</healthcheckUrl>-->
+                            <healthcheckUrl>http://localhost:9091/health</healthcheckUrl>
                             <arguments>
                                 <argument>java</argument>
                                 <argument>-jar</argument>
@@ -68,8 +66,9 @@
                                 <argument>--server.context-path=/standardstack</argument>
                                 <argument>--management.port=9091</argument>
                                 <argument>--token.retention.in.days=3</argument>
-                                <!--<argument>&#45;&#45;management.context-path=/admin</argument>-->
-                                <argument>--spring.logging.config=${project.build.outputDirectory}/logback-standard-api.xml</argument>
+                                <argument>--logging.level.org.springframework=INFO</argument>
+                                <argument>--logging.level.org.diveintojee.poc.standardstack=DEBUG</argument>
+                                <argument>--logging.file=/tmp/standardstack-tests.log</argument>
                             </arguments>
                         </configuration>
                     </execution>
