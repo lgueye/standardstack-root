@@ -7,7 +7,11 @@ import org.jbehave.core.junit.JUnitStory;
 import org.jbehave.core.reporters.Format;
 import org.jbehave.core.steps.InjectableStepsFactory;
 import org.jbehave.core.steps.spring.SpringStepsFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+import ch.qos.logback.classic.Level;
 
 /**
  * Responsible to:
@@ -38,6 +42,7 @@ public class AbstractJUnitStory extends JUnitStory {
 
     @Override
     public InjectableStepsFactory stepsFactory() {
+        ((ch.qos.logback.classic.Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME)).setLevel(Level.INFO);
         return new SpringStepsFactory(configuration(), new AnnotationConfigApplicationContext(StepsConfig.class));
     }
 }
