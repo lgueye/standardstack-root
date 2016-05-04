@@ -1,5 +1,6 @@
 package org.diveintojee.poc.standardstack.domain;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 import java.time.LocalDateTime;
@@ -78,5 +79,11 @@ public class Account {
     @Override
     public int hashCode() {
         return Objects.hashCode(id, email, firstName, lastName);
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this).add("id", id).add("email", email).add("firstName", firstName).add("lastName", lastName)
+                .add("created", created).add("closed", closed).toString();
     }
 }
