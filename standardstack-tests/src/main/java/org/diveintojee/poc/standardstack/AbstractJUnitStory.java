@@ -42,6 +42,7 @@ public class AbstractJUnitStory extends JUnitStory {
 
     @Override
     public InjectableStepsFactory stepsFactory() {
+        // Fix borrowed from http://stackoverflow.com/questions/20957422/unable-to-disable-logging-messages#comment31481958_20957422
         ((ch.qos.logback.classic.Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME)).setLevel(Level.INFO);
         return new SpringStepsFactory(configuration(), new AnnotationConfigApplicationContext(StepsConfig.class));
     }
