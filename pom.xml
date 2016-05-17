@@ -14,6 +14,7 @@
         <commons-codec.version>1.10</commons-codec.version>
         <commons-lang3.version>3.4</commons-lang3.version>
         <exec-maven-plugin.version>1.4.0</exec-maven-plugin.version>
+        <git-commit-id-plugin.version>2.1.11</git-commit-id-plugin.version>
         <guava.version>18.0</guava.version>
         <jackson-datatype-jsr310.version>2.4.0</jackson-datatype-jsr310.version>
         <java.version>${maven.compiler.source}</java.version>
@@ -176,6 +177,25 @@
                     </configuration>
                 </plugin>
                 <plugin>
+                    <groupId>pl.project13.maven</groupId>
+                    <artifactId>git-commit-id-plugin</artifactId>
+                    <version>${git-commit-id-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>revision</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <!--<dotGitDirectory>${project.basedir}/../../.git</dotGitDirectory>-->
+                        <verbose>true</verbose>
+                        <dateFormat>yyyy-MM-dd'T'HH:mm:ssZ</dateFormat>
+                        <generateGitPropertiesFile>true</generateGitPropertiesFile>
+                        <generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties</generateGitPropertiesFilename>
+                    </configuration>
+                </plugin>
+                <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>${maven-compiler-plugin.version}</version>
                     <configuration>
@@ -209,6 +229,10 @@
             <plugin>
                 <groupId>com.github.ekryd.sortpom</groupId>
                 <artifactId>sortpom-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>pl.project13.maven</groupId>
+                <artifactId>git-commit-id-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
