@@ -1,0 +1,38 @@
+---
+
+- name: droplets | create ssh key if needed
+  user: name="{{ ansible_user_id }}" generate_ssh_key="yes" ssh_key_file=".ssh/id_rsa"
+
+- name: droplets | ensure key exists at DigitalOcean
+  digital_ocean: state="present" command="ssh" name="ansible_ssh_key" ssh_pub_key="{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+  register: ansible_ssh_key
+
+- name: droplets | create if needed
+  digital_ocean: state="active" command="droplet" name="{{ item }}" size_id="1gb" region_id="ams2" image_id="ubuntu-16-04-x64" ssh_key_ids="{{ ansible_ssh_key.ssh_key.id }}" wait_timeout="500" unique_name="yes"
+  with_items: droplets_names
+  register: droplets
+
+- name: droplets | register env IPs
+  add_host: name="{{ item.droplet.ip_address }}" groups="{{ target_env }}"
+  with_items: droplets.results
+
+- name: droplets | register app IP
+  add_host: name="{{ item.droplet.ip_address }}" groups="standard-app"
+  when: "'standard-app' in item.droplet.name"
+  with_items: droplets.results
+
+- name: droplets | register lb IP
+  add_host: name="{{ item.droplet.ip_address }}" groups="lb"
+  when: "'lb' in item.droplet.name"
+  with_items: droplets.results
+
+- name: make sure the known hosts file exists
+  file: path="{{ ssh_known_hosts_file }}" state="touch"
+
+- name: droplets | remove from known hosts
+  shell: "ssh-keygen -R {{ item.droplet.ip_address }}"
+  with_items: droplets.results
+
+- name: droplets | add to know hosts
+  shell: "ssh-keyscan -H -T 10 {{ item.droplet.ip_address }} >> {{ ssh_known_hosts_file }}"
+  with_items: droplets.results

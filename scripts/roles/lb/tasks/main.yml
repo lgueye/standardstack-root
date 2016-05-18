@@ -1,0 +1,18 @@
+---
+- name: install fair
+  apt: name="{{ item }}" state="present"
+  with_items:
+    - fair
+
+- name: configure fair communications
+  template: src="fair.conf.j2" dest="/etc/fair.conf"
+
+- name: configure fair behavior (front end = carrousel)
+  template: src="fair.j2" dest="/etc/default/fair"
+
+# Start fair carrousel
+- name: ensure service is restarted
+  service: name="fair" state="restarted"
+
+- name: unix service | wait for port to be up
+  wait_for: port="{{ lb.port }}" delay="5" timeout="15"
