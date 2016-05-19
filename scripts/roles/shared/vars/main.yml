@@ -1,13 +1,18 @@
 ---
+ssh_known_hosts_file: "~/.ssh/known_hosts"
+ssh_key_file: ".ssh/id_rsa"
+digitalocean_ssh_key_name: "ansible_ssh_key"
+droplets_names:
+    - "standard-app-{{ target_env}}"
 node_management_user: "nodemanager"
 app:
   port: 8080
   management:
     port: 8081
-  logging_file: "/var/log/rolling-update-app-api"
-  repo: "https://github.com/lgueye/ansible-rolling-update.git"
-  local_project_path: "/tmp/ansible-rolling-update"
-  local_app_path: "/tmp/ansible-rolling-update/rolling-update-app"
+  logging_file: "/var/log/standardstack-app-api"
+  repo: "https://github.com/lgueye/standardstack-root.git"
+  local_project_path: "/tmp/standardstack-root"
+  local_app_path: "/tmp/standardstack-root/standardstack-app"
   node_target_link_path: "/opt/rolling-update-app-api"
   node_source_link_path: "/opt/java-apps/rolling-update-app-api"
 lb:
