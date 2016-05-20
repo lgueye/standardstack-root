@@ -2,19 +2,32 @@
 ssh_known_hosts_file: "~/.ssh/known_hosts"
 ssh_key_file: ".ssh/id_rsa"
 digitalocean_ssh_key_name: "ansible_ssh_key"
+appname: "standardstack"
 droplets_names:
-    - "standard-app-{{ target_env}}"
+    - "{{ appname }}-app-{{ target_env}}"
 node_management_user: "nodemanager"
+db:
+  ip: "{{ hostvars[groups['db'][0]]['ansible_eth0']['ipv4']['address'] }}"
+  alias: "db"
+  port: 3306
+  admin_user: "root"
+  admin_password: "{{ db_admin_password }}"
 app:
   port: 8080
   management:
     port: 8081
-  logging_file: "/var/log/standardstack-app-api"
-  repo: "https://github.com/lgueye/standardstack-root.git"
-  local_project_path: "/tmp/standardstack-root"
-  local_app_path: "/tmp/standardstack-root/standardstack-app"
-  node_target_link_path: "/opt/rolling-update-app-api"
-  node_source_link_path: "/opt/java-apps/rolling-update-app-api"
+  logging_file: "/var/log/{{ appname }}-api"
+  repo: "https://github.com/lgueye/{{ appname }}-root.git"
+  local_project_path: "/tmp/{{ appname }}-root"
+  local_app_path: "/tmp/{{ appname }}-root/{{ appname }}-api"
+  node_target_link_path: "/opt/{{ appname }}-api"
+  node_source_link_path: "/opt/java-apps/{{ appname }}-api"
+  db:
+      user: "{{ appname }}"
+      user_password: "{{ db_user_password }}"
+      name: "{{ appname }}"
+      driver: "com.mysql.jdbc.Driver"
+      url: "jdbc:mysql://{{ db.ip }}:{{ db.port }}/{{ appname }}?autoReconnect=true"
 lb:
   port: 80
   ip: "{{ hostvars[groups['lb'][0]]['ansible_eth0']['ipv4']['address'] }}"

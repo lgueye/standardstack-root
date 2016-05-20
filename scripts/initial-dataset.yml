@@ -1,0 +1,8 @@
+---
+
+- hosts: "db"
+  remote_user: "{{ node_management_user }}"
+  sudo: "yes"
+  tasks:
+  - "initial-dataset"
+

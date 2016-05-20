@@ -1,0 +1,29 @@
+---
+
+- hosts: "{{ hostvars[groups['db:&prod'][0]]['ansible_eth0']['ipv4']['address'] }}"
+  remote_user: "{{ node_management_user }}"
+  sudo: "yes"
+  vars:
+    dump_filename: /tmp/{{ app.db.name }}-dump-{{ ansible_date_time.epoch }}.sql
+  tasks:
+  # Copy database dump file to remote host and restore it to database {{app.db.name}}
+  - name: dump data to {{ dump-filename }}
+    mysql_db: login_user="{{db.admin_user}}" login_password="{{ db.admin_password }}" name="{{ app.db.name }}" state=dump target={{ dump_filename }}
+
+- hosts: "{{ hostvars[groups['db:&test'][0]]['ansible_eth0']['ipv4']['address'] }}"
+  remote_user: "{{ node_management_user }}"
+  sudo: "yes"
+  tasks:
+   - name: Copy Remote-To-Remote (from test to prod)
+     synchronize: src={{ dump_filename }} dest={{ dump_filename }}
+     delegate_to: "{{ hostvars[groups['db:&test'][0]]['ansible_eth0']['ipv4']['address'] }}"
+
+- hosts: "{{ hostvars[groups['db:&test'][0]]['ansible_eth0']['ipv4']['address'] }}"
+  remote_user: "{{ node_management_user }}"
+  sudo: "yes"
+  vars:
+    dump-filename: /tmp/{{ app.db.name }}-dump-{{ ansible_date_time.epoch }}.sql
+  tasks:
+  # Copy database dump file to remote host and restore it to database {{app.db.name}}
+  - name: dump data to {{ dump-filename }}
+    mysql_db: login_user="{{db.admin_user}}" login_password="{{ db.admin_password }}" name="{{ app.db.name }}" state=dump target={{ dump_filename }}

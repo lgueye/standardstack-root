@@ -1,0 +1,8 @@
+---
+# Sequence:
+# - clone to assess if deployment is required (check install revision against required one)
+
+- hosts: "localhost"
+  connection: "local"
+  roles:
+  - {role: "clone-app", rev: "{{ app_rev1 }}" }

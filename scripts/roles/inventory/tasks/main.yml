@@ -1,0 +1,21 @@
+---
+
+- name: create and fill 'app' group
+  add_host: name="{{ item.droplet.ip_address }}" groups="app,{{ target_env }}"
+  when: "'app' in item.droplet.name"
+  with_items: groups['all']
+
+- name: create and fill 'lb' group
+  add_host: name="{{ item.droplet.ip_address }}" groups="lb,{{ target_env }}"
+  when: "'lb' in item.droplet.name"
+  with_items: groups['all']
+
+- name: create and fill 'db' group
+  add_host: name="{{ item.droplet.ip_address }}" groups="db,{{ target_env }}"
+  when: "'db' in item.droplet.name"
+  with_items: groups['all']
+
+- name: create and fill 'index' group
+  add_host: name="{{ item.droplet.ip_address }}" groups="index,{{ target_env }}"
+  when: "'index' in item.droplet.name"
+  with_items: groups['all']

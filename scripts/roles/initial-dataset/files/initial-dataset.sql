@@ -1,0 +1,1 @@
+insert into TABLE_NAME () VALUES ();
