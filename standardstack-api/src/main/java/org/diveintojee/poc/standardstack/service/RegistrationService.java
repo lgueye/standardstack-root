@@ -29,13 +29,7 @@ public class RegistrationService {
 
     public String save(Registration registration) {
         registration.setExpires(LocalDateTime.now().plusDays(tokenRetentionInDays));
-        String token = DigestUtils.sha1Hex(
-                MoreObjects
-                        .toStringHelper(registration)
-                        .add("expires", registration.getExpires().format(DateTimeFormatter.ISO_DATE))
-                        .add("email", registration.getEmail())
-                        .add("firstName", registration.getFirstName())
-                        .add("lastName", registration.getLastName()).toString());
+        String token = Registration.generateToken(registration);
         registration.setToken(token);
         registrationRepository.put(token, registration);
         return token;
