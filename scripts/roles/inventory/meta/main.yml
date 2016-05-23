@@ -4,4 +4,4 @@ galaxy_info:
   description: Ansible role for creating DigitalOcean droplets cluster.
 
 dependencies:
-  - { role: "shared" }
+  - { role: "create-cluster" }

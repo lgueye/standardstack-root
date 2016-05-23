@@ -5,4 +5,4 @@
 - hosts: "localhost"
   connection: "local"
   roles:
-  - {role: "clone-app", rev: "{{ app_rev1 }}" }
+  - {role: "clone-app", rev: "{{ rev }}" }

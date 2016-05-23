@@ -8,22 +8,12 @@
   register: ansible_ssh_key
 
 - name: droplets | create if needed
-  digital_ocean: state="active" command="droplet" name="{{ item }}" size_id="1gb" region_id="ams2" image_id="ubuntu-16-04-x64" ssh_key_ids="{{ ansible_ssh_key.ssh_key.id }}" wait_timeout="500" unique_name="yes"
+  digital_ocean: state="active" command="droplet" name="{{ item }}" size_id="1gb" region_id="ams2" image_id="ubuntu-14-04-x64" ssh_key_ids="{{ ansible_ssh_key.ssh_key.id }}" wait_timeout="500" unique_name="yes"
   with_items: droplets_names
   register: droplets
 
-- name: droplets | register env IPs
-  add_host: name="{{ item.droplet.ip_address }}" groups="{{ target_env }}"
-  with_items: droplets.results
-
-- name: droplets | register app IP
-  add_host: name="{{ item.droplet.ip_address }}" groups="standard-app"
-  when: "'standard-app' in item.droplet.name"
-  with_items: droplets.results
-
-- name: droplets | register lb IP
-  add_host: name="{{ item.droplet.ip_address }}" groups="lb"
-  when: "'lb' in item.droplet.name"
+- name: droplets | wait for port 22 to be up
+  wait_for: host="{{ item.droplet.ip_address }}" port="22" delay="1"
   with_items: droplets.results
 
 - name: make sure the known hosts file exists
@@ -36,3 +26,24 @@
 - name: droplets | add to know hosts
   shell: "ssh-keyscan -H -T 10 {{ item.droplet.ip_address }} >> {{ ssh_known_hosts_file }}"
   with_items: droplets.results
+
+- name: create and fill 'app' group
+  add_host: name="{{ item.droplet.ip_address }}" groups="app,{{ target_env }}"
+  when: "'app' in item.droplet.name"
+  with_items: droplets.results
+
+- name: create and fill 'lb' group
+  add_host: name="{{ item.droplet.ip_address }}" groups="lb,{{ target_env }}"
+  when: "'lb' in item.droplet.name"
+  with_items: droplets.results
+
+- name: create and fill 'db' group
+  add_host: name="{{ item.droplet.ip_address }}" groups="db,{{ target_env }}"
+  when: "'db' in item.droplet.name"
+  with_items: droplets.results
+
+- name: create and fill 'index' group
+  add_host: name="{{ item.droplet.ip_address }}" groups="index,{{ target_env }}"
+  when: "'index' in item.droplet.name"
+  with_items: droplets.results
+

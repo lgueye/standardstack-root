@@ -14,13 +14,16 @@
   command: mvn clean package -f {{ app.local_app_path }}/pom.xml
 
 - name: configure api
-  template: src=rolling-update-app-api.yml.j2 dest="{{ app.local_app_path }}/api/target/classes/api.yml"
+  template: src=api.yml.j2 dest="{{ app.local_app_path }}/{{ appname }}-api/target/classes/api.yml"
+
+- name: configure dbupgrader
+  template: src=dbupgrader.yml.j2 dest="{{ app.local_app_path }}/{{ appname }}-dbupgrader/target/classes/dbupgrader.yml"
 
 - name: configure log levels
-  copy: src="logback.xml" dest="{{ app.local_app_path }}/api/target/classes/logback.xml"
+  copy: src="logback.xml" dest="{{ app.local_app_path }}/{{ appname }}-api/target/classes/logback.xml"
 
 - name: configure unix service
-  template: src="api.sh.j2" dest="{{ app.local_app_path }}/api/target/classes/{{ appname }}-api.sh" mode="u=xrw,g=xr,o=r"
+  template: src="api.sh.j2" dest="{{ app.local_app_path }}/{{ appname }}-api/target/classes/{{ appname }}-api.sh" mode="u=xrw,g=xr,o=r"
 
 - name: configure tests
-  template: src="tests.properties.j2" dest="{{ app.local_app_path }}/tests/target/test-classes/{{ appname }}-tests.properties"
+  template: src="tests.properties.j2" dest="{{ app.local_app_path }}/{{ appname }}-tests/target/test-classes/{{ appname }}-tests.properties"

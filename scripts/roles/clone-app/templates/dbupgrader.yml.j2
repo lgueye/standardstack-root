@@ -1,15 +1,8 @@
 logging:
   file: "{{ app.logging_file}}"
 
-management:
-  port: "{{ app.management.port }}"
-
 datasource:
   driverClassName: "{{ app.db.driver }}"
   username: "{{ app.db.user }}"
   password: "{{ app.db.user_password }}"
   url: "{{ app.db.url }}"
-
-endpoints:
-  shutdown:
-    enabled: true

@@ -5,6 +5,7 @@ digitalocean_ssh_key_name: "ansible_ssh_key"
 appname: "standardstack"
 droplets_names:
     - "{{ appname }}-app-{{ target_env}}"
+    - "db-{{ target_env }}"
 node_management_user: "nodemanager"
 db:
   ip: "{{ hostvars[groups['db'][0]]['ansible_eth0']['ipv4']['address'] }}"
@@ -18,8 +19,8 @@ app:
     port: 8081
   logging_file: "/var/log/{{ appname }}-api"
   repo: "https://github.com/lgueye/{{ appname }}-root.git"
-  local_project_path: "/tmp/{{ appname }}-root"
-  local_app_path: "/tmp/{{ appname }}-root/{{ appname }}-api"
+  local_project_path: "/tmp/apps/{{ appname }}-root/{{ rev }}"
+  local_app_path: "/tmp/apps/{{ appname }}-root/{{ rev }}/{{ appname }}-api"
   node_target_link_path: "/opt/{{ appname }}-api"
   node_source_link_path: "/opt/java-apps/{{ appname }}-api"
   db:
