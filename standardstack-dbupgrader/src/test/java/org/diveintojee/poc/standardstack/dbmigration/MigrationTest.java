@@ -5,7 +5,6 @@ import static org.junit.Assert.assertNotNull;
 
 import java.sql.PreparedStatement;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.diveintojee.poc.standardstack.domain.LocalDateTimeAttributeConverter;
 import org.diveintojee.poc.standardstack.domain.Registration;
 import org.flywaydb.core.Flyway;
@@ -32,10 +31,7 @@ public class MigrationTest {
 	public void migrationShouldSucceed() {
 		underTest.migrate();
 
-		final Registration registration = new Registration();
-		registration.setFirstName(RandomStringUtils.randomAlphanumeric(Registration.FIRST_NAME_MAX_SIZE));
-		registration.setLastName(RandomStringUtils.randomAlphanumeric(Registration.LAST_NAME_MAX_SIZE));
-		registration.setEmail(generateRandomEMail());
+		final Registration registration = TestFixtures.validRegistration();
 		// Create
 		String token = createRegistration(registration);
 		assertNotNull(token);
@@ -44,7 +40,7 @@ public class MigrationTest {
 		assertNotNull(saved);
 		assertEquals(token, saved.getToken());
 		// Update
-		String newEmail = generateRandomEMail();
+		String newEmail = TestFixtures.validEmail();
 		saved.setEmail(newEmail);
 		updateRegistration(saved);
 		Registration updated = retrieveRegistration(token);
@@ -60,12 +56,6 @@ public class MigrationTest {
 
 	}
 
-	private String generateRandomEMail() {
-		String x = RandomStringUtils.random(15);
-		String y = RandomStringUtils.random(15);
-		String z = RandomStringUtils.random(10);
-		return String.format("%s.%s@%s.net", x, y, z);
-	}
 
 	private void deleteRegistration(String token) {
 		String query = "delete from registrations where token = ?";
@@ -99,7 +89,7 @@ public class MigrationTest {
 	}
 
 	private String createRegistration(final Registration registration) {
-		String token = Registration.generateToken(registration);
+		String token = registration.generateToken();
 		registration.setToken(token);
 		final String INSERT_QUERY = "insert into registrations (token, first_name, last_name, email, expires) values (?, ?, ?, ?, ?)";
 		final LocalDateTimeAttributeConverter localDateTimeAttributeConverter = new LocalDateTimeAttributeConverter();
