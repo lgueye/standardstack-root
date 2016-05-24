@@ -31,7 +31,7 @@ public class MigrationTest {
 	public void migrationShouldSucceed() {
 		underTest.migrate();
 
-		final Registration registration = TestFixtures.validRegistration();
+		final Registration registration = Registration.validRegistration();
 		// Create
 		String token = createRegistration(registration);
 		assertNotNull(token);
@@ -40,7 +40,7 @@ public class MigrationTest {
 		assertNotNull(saved);
 		assertEquals(token, saved.getToken());
 		// Update
-		String newEmail = TestFixtures.validEmail();
+		String newEmail = Registration.validEmail();
 		saved.setEmail(newEmail);
 		updateRegistration(saved);
 		Registration updated = retrieveRegistration(token);
@@ -105,4 +105,5 @@ public class MigrationTest {
 
 		return token;
 	}
+
 }

@@ -12,6 +12,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 
 @Entity
 @Table(name = "registrations")
@@ -104,6 +105,23 @@ public class Registration {
         return DigestUtils.sha1Hex(helper
                         .add("email", email).add("firstName", firstName)
                         .add("lastName", lastName).toString());
+    }
+
+    public static Registration validRegistration() {
+        final Registration registration = new Registration();
+        registration.setExpires(LocalDateTime.now().plusDays(3));
+        registration.setFirstName(RandomStringUtils.randomAlphanumeric(Registration.FIRST_NAME_MAX_SIZE));
+        registration.setLastName(RandomStringUtils.randomAlphanumeric(Registration.LAST_NAME_MAX_SIZE));
+        registration.setEmail(validEmail());
+        registration.setToken(registration.generateToken());
+        return registration;
+    }
+
+    public static String validEmail() {
+        String x = RandomStringUtils.randomAlphanumeric(15);
+        String y = RandomStringUtils.randomAlphanumeric(15);
+        String z = RandomStringUtils.randomAlphanumeric(10);
+        return String.format("%s.%s@%s.net", x, y, z);
     }
 
     public void archive() {

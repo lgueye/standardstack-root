@@ -10,6 +10,7 @@
         <module>standardstack-tests</module>
         <module>standardstack-domain</module>
         <module>standardstack-dbupgrader</module>
+        <module>standardstack-initialdata</module>
     </modules>
     <properties>
         <commons-codec.version>1.10</commons-codec.version>
