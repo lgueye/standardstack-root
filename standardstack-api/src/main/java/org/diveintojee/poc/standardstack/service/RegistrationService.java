@@ -1,17 +1,14 @@
 package org.diveintojee.poc.standardstack.service;
 
-import com.google.common.base.MoreObjects;
-import org.apache.commons.codec.digest.DigestUtils;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.diveintojee.poc.standardstack.domain.Account;
 import org.diveintojee.poc.standardstack.domain.Registration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Map;
 
 @Component
 public class RegistrationService {
@@ -29,7 +26,7 @@ public class RegistrationService {
 
     public String save(Registration registration) {
         registration.setExpires(LocalDateTime.now().plusDays(tokenRetentionInDays));
-        String token = Registration.generateToken(registration);
+        String token = registration.generateToken();
         registration.setToken(token);
         registrationRepository.put(token, registration);
         return token;
