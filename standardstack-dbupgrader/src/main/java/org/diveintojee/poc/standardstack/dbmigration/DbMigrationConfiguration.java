@@ -35,6 +35,7 @@ public class DbMigrationConfiguration {
         Flyway flyway = new Flyway();
         flyway.setLocations("migrations");
         flyway.setDataSource(dataSource());
+        flyway.setBaselineOnMigrate(true);
         return flyway;
     }
 

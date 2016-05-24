@@ -3,8 +3,8 @@ CREATE TABLE registrations (
   first_name VARCHAR(50),
   last_name VARCHAR(50),
   email VARCHAR(50),
-  expires TIMESTAMP,
-  archived TIMESTAMP
+  expires TIMESTAMP NULL,
+  archived TIMESTAMP NULL
 );
 
 ALTER TABLE registrations ADD PRIMARY KEY (token);
