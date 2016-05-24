@@ -19,7 +19,7 @@ public class Registration {
 
     public static final int FIRST_NAME_MAX_SIZE = 50;
     public static final int LAST_NAME_MAX_SIZE = 50;
-    public static final int EMAIL_MAX_SIZE = 50;
+    public static final int EMAIL_MAX_SIZE = 100;
     public static final int TOKEN_MAX_SIZE = 200;
 
     @Id
@@ -96,14 +96,14 @@ public class Registration {
                 .add("archived", archived).toString();
     }
 
-    public static String generateToken(final Registration registration) {
-        final MoreObjects.ToStringHelper helper = MoreObjects.toStringHelper(registration);
-        if (registration.getExpires() != null) {
-            helper.add("expires", registration.getExpires().format(DateTimeFormatter.ISO_DATE));
+    public String generateToken() {
+        final MoreObjects.ToStringHelper helper = MoreObjects.toStringHelper(this);
+        if (expires != null) {
+            helper.add("expires", expires.format(DateTimeFormatter.ISO_DATE));
         }
         return DigestUtils.sha1Hex(helper
-                        .add("email", registration.getEmail()).add("firstName", registration.getFirstName())
-                        .add("lastName", registration.getLastName()).toString());
+                        .add("email", email).add("firstName", firstName)
+                        .add("lastName", lastName).toString());
     }
 
     public void archive() {
