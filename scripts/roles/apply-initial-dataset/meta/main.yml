@@ -4,4 +4,4 @@ galaxy_info:
   description: An Ansible role to apply database initial dataset.
 
 dependencies:
-  - { role: "inventory" }
+  - { role: "shared" }

@@ -3,11 +3,11 @@
 - hosts: "localhost"
   connection: "local"
   roles:
-  - "generate-initial-dataset"
+  - "inventory"
 
-- hosts: "db:prod"
+- hosts: "db"
   remote_user: "{{ node_management_user }}"
   sudo: "yes"
   roles:
-  - "apply-initial-dataset"
+  - "upgrade-db"
 

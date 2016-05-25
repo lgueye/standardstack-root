@@ -10,7 +10,7 @@
   roles:
   - { role: "security"}
 
-- hosts: "db:&{{ target_env }}"
+- hosts: "db"
   remote_user: "{{ node_management_user }}"
   sudo: "yes"
   roles:

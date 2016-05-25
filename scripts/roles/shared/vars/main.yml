@@ -4,17 +4,17 @@ ssh_known_hosts_file: "~/.ssh/known_hosts"
 ssh_key_file: ".ssh/id_rsa"
 digitalocean_ssh_key_name: "ansible_ssh_key"
 droplets_names:
-  - "{{ appname }}-app-{{ target_env }}"
-  - "db-{{ target_env }}"
+  - "{{ appname }}-app-test"
+  - "db-test"
+  - "{{ appname }}-app-prod"
+  - "db-prod"
 node_management_user: "nodemanager"
 db:
-  ip: "{{ groups['db'][0] }}"
   alias: "db"
   port: 3306
   admin_user: "root"
   admin_password: "{{ db_admin_password }}"
 app:
-  ip: "{{ groups['app'][0] }}"
   port: 8080
   management:
     port: 8081
@@ -29,7 +29,6 @@ app:
     user_password: "{{ db_user_password }}"
     name: "{{ appname }}"
     driver: "com.mysql.jdbc.Driver"
-    url: "jdbc:mysql://{{ db.ip }}:{{ db.port }}/{{ appname }}?autoReconnect=true"
 
 appname: "standardstack"
 dump_filename: "/tmp/{{ app.db.name }}-dump-{{ ansible_date_time.epoch }}.sql"
