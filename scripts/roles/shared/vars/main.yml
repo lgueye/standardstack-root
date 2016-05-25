@@ -32,6 +32,8 @@ app:
     url: "jdbc:mysql://{{ db.ip }}:{{ db.port }}/{{ appname }}?autoReconnect=true"
 
 appname: "standardstack"
+dump_filename: "/tmp/{{ app.db.name }}-dump-{{ ansible_date_time.epoch }}.sql"
+
 #lb:
 #  port: 80
 #  ip: "{{ hostvars[groups['lb'][0]]['ansible_eth0']['ipv4']['address'] }}"

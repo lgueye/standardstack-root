@@ -1,0 +1,6 @@
+---
+
+- hosts: "db:&prod"
+  connection: "local"
+  roles:
+  - "apply-initial-dataset"

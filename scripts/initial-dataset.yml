@@ -1,8 +1,13 @@
 ---
 
-- hosts: "db:&{{ target_env }}"
+- hosts: "localhost"
+  connection: "local"
+  roles:
+  - "generate-initial-dataset"
+
+- hosts: "db:prod"
   remote_user: "{{ node_management_user }}"
   sudo: "yes"
   roles:
-  - "initial-dataset"
+  - "apply-initial-dataset"
 

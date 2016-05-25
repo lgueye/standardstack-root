@@ -1,0 +1,7 @@
+---
+
+- name: configure log levels
+  copy: src="logback.xml" dest="{{ app.local_project_path }}/{{ appname }}-initialdata/target/classes/logback.xml"
+
+- name: generate
+  command: java -jar {{ app.local_project_path }}/{{ appname }}-initialdata/target/standardstack-initialdata-0.0.1-SNAPSHOT.jar --lines_count=1000 --destination="{{ app.local_project_path }}/scripts/roles/apply-initial-dataset/files/initial-dataset.sql"

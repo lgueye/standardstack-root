@@ -3,14 +3,14 @@
 - hosts: "localhost"
   connection: "local"
   roles:
-  - "create-cluster"
+  - "inventory"
 
 - hosts: "!localhost"
   remote_user: "root"
   roles:
   - { role: "security"}
 
-- hosts: "db"
+- hosts: "db:&{{ target_env }}"
   remote_user: "{{ node_management_user }}"
   sudo: "yes"
   roles:

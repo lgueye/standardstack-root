@@ -1,21 +1,59 @@
 ---
 
+- name: droplets | create ssh key if needed
+  user: name="{{ ansible_user_id }}" generate_ssh_key="yes" ssh_key_file="{{ ssh_key_file }}"
+
+- name: droplets | ensure key exists at DigitalOcean
+  digital_ocean: state="present" command="ssh" name="{{ digitalocean_ssh_key_name }}" ssh_pub_key="{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+  register: ansible_ssh_key
+
+- name: droplets | create if needed
+  digital_ocean: state="active" command="droplet" name="{{ item }}" size_id="1gb" region_id="ams2" image_id="ubuntu-14-04-x64" ssh_key_ids="{{ ansible_ssh_key.ssh_key.id }}" wait_timeout="500" unique_name="yes"
+  with_items: droplets_names
+  register: droplets
+
+- name: droplets | wait for port 22 to be up
+  wait_for: host="{{ item.droplet.ip_address }}" port="22" delay="1"
+  with_items: droplets.results
+
+- name: make sure the known hosts file exists
+  file: path="{{ ssh_known_hosts_file }}" state="touch"
+
+- name: droplets | remove from known hosts
+  shell: "ssh-keygen -R {{ item.droplet.ip_address }}"
+  with_items: droplets.results
+
+- name: droplets | add to know hosts
+  shell: "ssh-keyscan -H -T 10 {{ item.droplet.ip_address }} >> {{ ssh_known_hosts_file }}"
+  with_items: droplets.results
+
+- name: create and fill 'test' group
+  add_host: name="{{ item.droplet.ip_address }}" groups="test"
+  when: "'test' in item.droplet.name"
+  with_items: droplets.results
+
+- name: create and fill 'prod' group
+  add_host: name="{{ item.droplet.ip_address }}" groups="prod"
+  when: "'prod' in item.droplet.name"
+  with_items: droplets.results
+
 - name: create and fill 'app' group
-  add_host: name="{{ item.droplet.ip_address }}" groups="app,{{ target_env }}"
+  add_host: name="{{ item.droplet.ip_address }}" groups="app"
   when: "'app' in item.droplet.name"
-  with_items: groups['all']
+  with_items: droplets.results
 
 - name: create and fill 'lb' group
-  add_host: name="{{ item.droplet.ip_address }}" groups="lb,{{ target_env }}"
+  add_host: name="{{ item.droplet.ip_address }}" groups="lb"
   when: "'lb' in item.droplet.name"
-  with_items: groups['all']
+  with_items: droplets.results
 
 - name: create and fill 'db' group
-  add_host: name="{{ item.droplet.ip_address }}" groups="db,{{ target_env }}"
+  add_host: name="{{ item.droplet.ip_address }}" groups="db"
   when: "'db' in item.droplet.name"
-  with_items: groups['all']
+  with_items: droplets.results
 
 - name: create and fill 'index' group
-  add_host: name="{{ item.droplet.ip_address }}" groups="index,{{ target_env }}"
+  add_host: name="{{ item.droplet.ip_address }}" groups="index"
   when: "'index' in item.droplet.name"
-  with_items: groups['all']
+  with_items: droplets.results
+

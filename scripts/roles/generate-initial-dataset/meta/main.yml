@@ -1,0 +1,7 @@
+---
+galaxy_info:
+  author: Louis Gueye
+  description: An Ansible role to generate an initial database dataset (demo purpose only).
+
+dependencies:
+  - { role: "inventory" }

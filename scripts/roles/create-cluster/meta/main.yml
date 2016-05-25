@@ -1,7 +1,0 @@
----
-galaxy_info:
-  author: Louis Gueye
-  description: Ansible role for creating DigitalOcean droplets cluster.
-
-dependencies:
-  - { role: "shared" }

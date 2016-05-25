@@ -1,7 +1,7 @@
 ---
 galaxy_info:
   author: Louis Gueye
-  description: An Ansible role for configuring nodemanager user on target hosts.
+  description: An Ansible role to clone the repository on the manager node and properly configure the various tools (dbupgrader, dataset initializer, etc).
 
 dependencies:
-  - { role: "create-cluster" }
+  - { role: "inventory" }

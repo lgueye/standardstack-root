@@ -1,6 +1,7 @@
 ---
+
 # Copy database dump file to remote host and restore it to database {{app.db.name}}
 - name: copy database dump file to remote host
   copy: src=initial-dataset.sql dest=/tmp
 - name: import data from sql file to database
-  mysql_db: name={{ app.db.name }} state=import target=/tmp/initial-dataset.sql
+  mysql_db: login_user="{{ app.db.user }}" login_password="{{ app.db.user_password }}" name="{{ app.db.name }}" state=import target=/tmp/initial-dataset.sql

@@ -1,0 +1,8 @@
+logging:
+  file: "{{ app.logging_file}}"
+
+datasource:
+  driverClassName: "{{ app.db.driver }}"
+  username: "{{ app.db.user }}"
+  password: "{{ app.db.user_password }}"
+  url: "jdbc:mysql://{{ groups['db'] | intersect(groups['prod']) }}:{{ app.db.port }}/standardstack?autoReconnect=true"

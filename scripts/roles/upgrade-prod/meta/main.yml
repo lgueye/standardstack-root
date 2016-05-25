@@ -1,0 +1,7 @@
+---
+galaxy_info:
+  author: Louis Gueye
+  description: An Ansible role to migrate the production db to an initial state.
+
+dependencies:
+  - { role: "inventory" }

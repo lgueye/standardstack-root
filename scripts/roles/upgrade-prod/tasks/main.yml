@@ -1,0 +1,10 @@
+---
+
+- name: configure dbupgrader
+  template: src=dbupgrader.yml.j2 dest="{{ app.local_project_path }}/{{ appname }}-dbupgrader/target/classes/dbupgrader.yml"
+
+- name: configure log levels
+  copy: src="logback.xml" dest="{{ app.local_project_path }}/{{ appname }}-dbupgrader/target/classes/logback.xml"
+
+- name: upgrade prod
+  command: java -jar {{ app.local_project_path }}/{{ appname }}-dbupgrader/target/{{ appname }}-dbupgrader-0.0.1-SNAPSHOT.jar --spring.config.location={{ app.local_project_path }}/{{ appname }}-dbupgrader/target/classes --spring.config.name=dbupgrader
