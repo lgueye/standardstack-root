@@ -1,0 +1,40 @@
+---
+
+- hosts: "localhost"
+  connection: "local"
+  roles:
+  - {role: "inventory"}
+
+- hosts: "db:&{{ source_env }}"
+  vars_files:
+    - roles/shared/vars/main.yml
+  remote_user: "{{ node_management_user }}"
+  sudo: "yes"
+  tasks:
+  # Copy database dump file to remote host and restore it to database {{app.db.name}}
+  - name: "dumping data on {{ source_env }} to {{ dump_filename }}"
+    mysql_db: login_user="{{db.admin_user}}" login_password="{{ db.admin_password }}" name="{{ app.db.name }}" state=dump target={{ dump_filename }}
+
+- hosts: "localhost"
+  vars_files:
+    - roles/shared/vars/main.yml
+  tasks:
+    - name: "transfer {{ dump_filename }} from {{ (groups['db'] | intersect(groups[ vars['source_env'] ]))[0] }} to localhost"
+      shell: "scp {{ node_management_user }}@{{ (groups['db'] | intersect(groups[ vars['source_env'] ]))[0] }}:{{ dump_filename }} {{ dump_filename }}"
+
+- hosts: "localhost"
+  vars_files:
+    - roles/shared/vars/main.yml
+  tasks:
+    - name: "transfer {{ dump_filename }} from localhost to {{ (groups['db'] | intersect(groups[ vars['target_env'] ]))[0] }}"
+      shell: "scp {{ dump_filename }} {{ node_management_user }}@{{ (groups['db'] | intersect(groups[ vars['target_env'] ]))[0] }}:{{ dump_filename }}"
+
+- hosts: "db:&{{ target_env }}"
+  vars_files:
+    - roles/shared/vars/main.yml
+  remote_user: "{{ node_management_user }}"
+  sudo: "yes"
+  tasks:
+  # Copy database dump file to remote host and restore it to database {{app.db.name}}
+  - name: "import data on {{ target_env }} from {{ dump_filename }}"
+    mysql_db: login_user="{{db.admin_user}}" login_password="{{ db.admin_password }}" name="{{ app.db.name }}" state=import target={{ dump_filename }}
