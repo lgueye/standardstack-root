@@ -5,4 +5,4 @@ datasource:
   driverClassName: "{{ app.db.driver }}"
   username: "{{ app.db.user }}"
   password: "{{ app.db.user_password }}"
-  url: "jdbc:mysql://{{ groups['db'][0] }}:{{ db.port }}/{{ app.db.name }}?autoReconnect=true"
+  url: "jdbc:mysql://{{ target_db }}:{{ db.port }}/{{ app.db.name }}?autoReconnect=true"

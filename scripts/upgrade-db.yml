@@ -3,11 +3,7 @@
 - hosts: "localhost"
   connection: "local"
   roles:
-  - "inventory"
-
-- hosts: "db"
-  remote_user: "{{ node_management_user }}"
-  sudo: "yes"
-  roles:
-  - "upgrade-db"
+  - {role: "inventory"}
+  - {role: "upgrade-db", target_db: "{{ (groups['db'] | intersect(groups['test']))[0] }}" }
+  - {role: "upgrade-db", target_db: "{{ (groups['db'] | intersect(groups['prod']))[0] }}" }
 
