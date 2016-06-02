@@ -1,0 +1,22 @@
+---
+
+- hosts: "localhost"
+  connection: "local"
+  roles:
+  - "inventory"
+
+- hosts: "app:&{{ target_env }}"
+  remote_user: "{{ node_management_user }}"
+  sudo: "yes"
+  vars_files:
+  - "roles/shared/vars/main.yml"
+  tasks:
+  - name: "check if application is already deployed on the node"
+    stat: path="{{ app.node_source_link_path }}/{{ rev }}/{{ appname }}-api.jar"
+    register: "app_already_deployed"
+  - name: "check if application is running"
+    shell: "netcat -z localhost {{ app.port }}"
+    register: "app_running"
+  roles:
+  - { role: "upgrade-app", when: (app_already_deployed.rc != 0 and app_running.rc != 0) }
+
