@@ -31,7 +31,6 @@ app:
     driver: "com.mysql.jdbc.Driver"
 
 appname: "standardstack"
-dump_filename: "/tmp/{{ app.db.name }}-dump-{{ ansible_date_time.epoch }}.sql"
 
 #lb:
 #  port: 80

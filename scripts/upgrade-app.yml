@@ -3,20 +3,38 @@
 - hosts: "localhost"
   connection: "local"
   roles:
-  - "inventory"
+  - {role: "clone-app", rev: "{{ rev }}"}
 
 - hosts: "app:&{{ target_env }}"
   remote_user: "{{ node_management_user }}"
   sudo: "yes"
   vars_files:
   - "roles/shared/vars/main.yml"
+  roles:
+  - {role: "java"}
   tasks:
-  - name: "check if application is already deployed on the node"
+  - name: "check if application revision {{rev}} is already deployed on the node"
     stat: path="{{ app.node_source_link_path }}/{{ rev }}/{{ appname }}-api.jar"
     register: "app_already_deployed"
   - name: "check if application is running"
     shell: "netcat -z localhost {{ app.port }}"
     register: "app_running"
-  roles:
-  - { role: "upgrade-app", when: (app_already_deployed.rc != 0 and app_running.rc != 0) }
+  - name: "create {{ deploy_dir }}"
+    when: (app_already_deployed.rc == 0)
+  - name: "copy {{ appname }}*.jar to {{ deploy_dir }}"
+    when: (app_already_deployed.rc == 0)
+  - name: "extrapolate {{ appname }}.conf"
+    when: (app_already_deployed.rc == 0)
+  - name: "copy {{ appname }}.conf to {{ deploy_dir }}"
+    when: (app_already_deployed.rc == 0)
 
+  - name: "kill {{ appname }}"
+    when: (app_running.rc == 0)
+  - name: "unlink {{ appname }}.jar"
+    when: (app_running.rc == 0)
+  - name: "link {{ appname }}*.jar to /etc/init.d/{{appname}}"
+    when: (app_running.rc == 0)
+  - name: "start {{ appname }}"
+    when: (app_running.rc == 0)
+  - name: "wait {{ appname }} port"
+    when: (app_running.rc == 0)
