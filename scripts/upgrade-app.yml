@@ -10,31 +10,45 @@
   sudo: "yes"
   vars_files:
   - "roles/shared/vars/main.yml"
-  roles:
-  - {role: "java"}
   tasks:
   - name: "check if application revision {{rev}} is already deployed on the node"
-    stat: path="{{ app.node_source_link_path }}/{{ rev }}/{{ appname }}-api.jar"
+    stat: path="/opt/{{ appname }}/{{ rev }}/{{ appname }}.jar"
     register: "app_already_deployed"
   - name: "check if application is running"
     shell: "netcat -z localhost {{ app.port }}"
     register: "app_running"
+#  roles:
+#  - {role: "remove-from-lb-members", when: (app_already_deployed.rc == 0)}
+#  - {role: "deploy-app", when: (app_already_deployed.rc == 0)}
+#  - {role: "start-app", when: (app_running.rc == 0)}
+#  - {role: "add-to-lb-members", when: (app_running.rc == 0)}
+
   - name: "create {{ deploy_dir }}"
+    file: state="directory" dest="{{ deploy_dir }}"
     when: (app_already_deployed.rc == 0)
   - name: "copy {{ appname }}*.jar to {{ deploy_dir }}"
+    copy: src="{{ build_dir }}/target/{{ appname }}-api*.jar" dest="{{ deploy_dir }}/{{ appname }}.jar"
     when: (app_already_deployed.rc == 0)
   - name: "extrapolate {{ appname }}.conf"
-    when: (app_already_deployed.rc == 0)
-  - name: "copy {{ appname }}.conf to {{ deploy_dir }}"
+    template: src="{{ appname }}.conf.j2" dest="{{ deploy_dir }}/{{ appname }}.conf"
     when: (app_already_deployed.rc == 0)
 
+
   - name: "kill {{ appname }}"
+    shell: "pkill -f {{ appname }}"
     when: (app_running.rc == 0)
+    ignore_errors: yes
   - name: "unlink {{ appname }}.jar"
+    file: state="absent" dest="/etc/init.d/{{ appname }}"
     when: (app_running.rc == 0)
   - name: "link {{ appname }}*.jar to /etc/init.d/{{appname}}"
+    file: state="present" src="{{ deploy_dir }}/{{ appname }}.jar" dest="/etc/init.d/{{ appname }}"
     when: (app_running.rc == 0)
   - name: "start {{ appname }}"
+    service: name="{{ appname }}" enabled="yes" state="started"
     when: (app_running.rc == 0)
   - name: "wait {{ appname }} port"
+    wait_for: port="{{ app.port }}" delay="1"
+  - name: "wait {{ appname }} management port"
+    wait_for: port="{{ app.management.port }}" delay="1"
     when: (app_running.rc == 0)
