@@ -1,0 +1,56 @@
+---
+
+# update lb conf: remove node from the pool and reload lb
+- name: "update lb conf: remove node {{ ansible_eth0.ipv4.address }}"
+  template: src="remove_node_from_pool.conf.j2" dest="/etc/nginx/nginx.conf"
+  delegate_to: "{{ (groups['lb'] | intersect(groups[ vars['target_env'] ]))[0] }}"
+- name: "restart lb"
+  service: name="nginx" state="reloaded"
+  delegate_to: "{{ (groups['lb'] | intersect(groups[ vars['target_env'] ]))[0] }}"
+
+# deploy
+- name: "create {{ deploy_dir }}"
+  file: state="directory" dest="{{ deploy_dir }}"
+  when: {{ require_deployment }}
+- name: "copy {{ appname }}*.jar to {{ deploy_dir }}"
+  copy: src="{{ build_dir }}/target/{{ appname }}-api*.jar" dest="{{ deploy_dir }}/{{ appname }}.jar"
+  when: {{ require_deployment }}
+- name: "extrapolate {{ appname }}.conf"
+  template: src="{{ appname }}.conf.j2" dest="{{ deploy_dir }}/{{ appname }}.conf"
+  when: {{ require_deployment }}
+
+# stop
+- name: "kill {{ appname }}"
+  shell: "pkill -f {{ appname }}"
+  when: {{ require_restart }}
+  ignore_errors: yes
+
+# update link
+- name: "unlink {{ appname }}.jar"
+  file: state="absent" dest="/etc/init.d/{{ appname }}"
+  when: {{ require_restart }}
+- name: "link {{ appname }}*.jar to /etc/init.d/{{appname}}"
+  file: state="link" src="{{ deploy_dir }}/{{ appname }}.jar" dest="/etc/init.d/{{ appname }}"
+  when: {{ require_restart }}
+
+# start
+- name: "start {{ appname }}"
+  service: name="{{ appname }}" enabled="yes" state="started"
+  when: {{ require_restart }}
+
+# wait for ports to be available
+- name: "wait {{ appname }} port"
+  wait_for: port="{{ app.port }}" delay="1"
+- name: "wait {{ appname }} management port"
+  wait_for: port="{{ app.management.port }}" delay="1"
+  when: {{ require_restart }}
+
+# update lb conf: add node back in the pool and reload lb
+- name: "update lb conf: add node {{ ansible_eth0.ipv4.address }}"
+  template: src="add_node_to_pool.conf.j2" dest="/etc/nginx/nginx.conf"
+  delegate_to: "{{ (groups['lb'] | intersect(groups[ vars['target_env'] ]))[0] }}"
+  when: {{ require_restart }}
+- name: "restart lb"
+  service: name="nginx" state="reloaded"
+  delegate_to: "{{ (groups['lb'] | intersect(groups[ vars['target_env'] ]))[0] }}"
+  when: {{ require_restart }}

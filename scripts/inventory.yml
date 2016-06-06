@@ -15,3 +15,9 @@
   sudo: "yes"
   roles:
   - "app-db"
+
+- hosts: "lb"
+  remote_user: "{{ node_management_user }}"
+  sudo: "yes"
+  roles:
+  - "lb"

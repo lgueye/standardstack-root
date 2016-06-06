@@ -20,6 +20,7 @@ db:
   admin_password: "{{ db_admin_password }}"
 app:
   port: 8080
+  context: "/"
   management:
     port: 8081
   logging_file: "/var/log/{{ appname }}-api"
@@ -33,9 +34,10 @@ app:
     user_password: "{{ db_user_password }}"
     name: "{{ appname }}"
     driver: "com.mysql.jdbc.Driver"
+    dialect: "org.hibernate.dialect.MySQL5Dialect"
+    show_sql: true
 
 appname: "standardstack"
 
-#lb:
-#  port: 80
-#  ip: "{{ hostvars[groups['lb'][0]]['ansible_eth0']['ipv4']['address'] }}"
+lb:
+  port: 80
