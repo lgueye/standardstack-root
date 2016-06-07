@@ -1,28 +1,24 @@
 package org.diveintojee.poc.standardstack.service;
 
-import org.diveintojee.poc.standardstack.domain.Account;
-import org.springframework.stereotype.Component;
-
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicLong;
+
+import org.diveintojee.poc.standardstack.domain.Account;
+import org.diveintojee.poc.standardstack.repository.AccountRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 @Component
 public class AccountService {
 
-    private Map<Long, Account> accountRepository = new HashMap<>();
-    private AtomicLong ids = new AtomicLong();
+    @Autowired
+    private AccountRepository accountRepository;
 
-    public Long save(Account account) {
+    public Long save(final Account account) {
         account.setCreated(LocalDateTime.now());
-        final Long id = ids.incrementAndGet();
-        account.setId(id);
-        accountRepository.put(id, account);
-        return id;
+        return accountRepository.save(account).getId();
     }
 
     public Account getOne(Long id) {
-        return accountRepository.get(id);
+        return accountRepository.findOne(id);
     }
 }

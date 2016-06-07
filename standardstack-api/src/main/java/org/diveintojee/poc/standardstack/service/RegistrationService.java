@@ -1,11 +1,10 @@
 package org.diveintojee.poc.standardstack.service;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.diveintojee.poc.standardstack.domain.Account;
 import org.diveintojee.poc.standardstack.domain.Registration;
+import org.diveintojee.poc.standardstack.repository.RegistrationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -13,7 +12,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class RegistrationService {
 
-    private Map<String, Registration> registrationRepository = new HashMap<>();
+    @Autowired
+    private RegistrationRepository registrationRepository;
 
     @Autowired
     private AccountService accountService;
@@ -28,25 +28,22 @@ public class RegistrationService {
         registration.setExpires(LocalDateTime.now().plusDays(tokenRetentionInDays));
         String token = registration.generateToken();
         registration.setToken(token);
-        registrationRepository.put(token, registration);
+        registrationRepository.save(registration);
         return token;
     }
 
     public Registration getOne(String token) {
-        return registrationRepository.get(token);
+        return registrationRepository.findOne(token);
     }
 
     public Registration findByEmail(String email) {
-        return registrationRepository.values()
-                .stream()
-                .filter(registration -> email.equals(registration.getEmail()))
-                .findFirst().get();
+        return registrationRepository.findOneByEmail(email);
     }
 
     public Account confirm(String token) {
         Registration registration = getOne(token);
         registration.archive();
-        registrationRepository.put(token, registration);
+        registrationRepository.save(registration);
         Account account = registrationToAccountConverter.convert(registration);
         accountService.save(account);
         return account;
