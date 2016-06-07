@@ -1,12 +1,9 @@
 ---
-#- name: app-tests | configure
-#  template: src="rolling-update-app-tests.properties.j2" dest="{{ app.local_app_path }}/tests/target/test-classes/rolling-update-app-tests.properties"
+- name: "configure tests to run against lb host {{ (groups['lb'] | intersect(groups[ vars['target_env'] ]))[0] }}"
+  template: src="tests.properties.j2" dest="{{ app.local_project_path }}/{{ appname }}-tests/target/classes/{{ appname }}-tests.properties"
 
-#- name: app-tests | wait 20 s
-#  pause: seconds="20"
-
-- name: app-tests | run
+- name: "run tests"
   shell: mvn verify -Prun-tests
   args:
-    chdir: "{{ app.local_app_path }}/tests"
+    chdir: "{{ app.local_project_path }}/{{ appname }}-tests"
 

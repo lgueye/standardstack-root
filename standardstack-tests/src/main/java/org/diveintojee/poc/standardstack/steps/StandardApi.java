@@ -2,6 +2,7 @@ package org.diveintojee.poc.standardstack.steps;
 
 import org.diveintojee.poc.standardstack.domain.Account;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -20,6 +21,15 @@ public class StandardApi {
     @Autowired
     private RestTemplate api;
 
+    @Value("${app.host}")
+    private String host;
+
+    @Value("${app.port}")
+    private int port;
+
+    @Value("${app.context}")
+    private String context;
+
     @Autowired
     private DomainToTestRegistrationConverter domainToTestRegistrationConverter;
     @Autowired
@@ -30,7 +40,7 @@ public class StandardApi {
         headers.setContentType(APPLICATION_JSON);
         final HttpEntity<org.diveintojee.poc.standardstack.domain.Registration> request =
                 new HttpEntity<>(testToDomainRegistrationConverter.convert(registration), headers);
-        URI location = api.postForLocation("http://localhost:9090/standardstack/api/registrations", request);
+        URI location = api.postForLocation(apiUrl() + "/registrations", request);
         return domainToTestRegistrationConverter.convert(
                 loadByLocation(location, org.diveintojee.poc.standardstack.domain.Registration.class));
     }
@@ -47,7 +57,7 @@ public class StandardApi {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(singletonList(APPLICATION_JSON));
         HttpEntity<String> entity = new HttpEntity<>(headers);
-        final String url = "http://localhost:9090/standardstack/api/registrations?email=" + email;
+        final String url = apiUrl() + "/registrations?email=" + email;
         final ResponseEntity<org.diveintojee.poc.standardstack.domain.Registration> responseEntity = api
                 .exchange(URI.create(url), HttpMethod.GET, entity, org.diveintojee.poc.standardstack.domain.Registration.class);
         return domainToTestRegistrationConverter.convert(responseEntity.getBody());
@@ -55,8 +65,12 @@ public class StandardApi {
 
     public Account confirmRegistration(String email) {
         final String token = loadRegistrationByEmail(email).getToken();
-        final String url = "http://localhost:9090/standardstack/api/registrations/" + token;
+        final String url = apiUrl() + "/registrations/" + token;
         URI location = api.postForLocation(url, new HttpEntity<>(new HttpHeaders()));
         return loadByLocation(location, Account.class);
+    }
+
+    private String apiUrl() {
+        return String.format("http://%s:%s/%s/api", host, port, context);
     }
 }

@@ -127,5 +127,48 @@
                 </plugins>
             </build>
         </profile>
+        <profile>
+            <id>run-tests</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jbehave</groupId>
+                        <artifactId>jbehave-maven-plugin</artifactId>
+                        <version>${jbehave.version}</version>
+                        <executions>
+                            <execution>
+                                <id>run-stories-as-embeddables</id>
+                                <phase>integration-test</phase>
+                                <goals>
+                                    <goal>run-stories-as-embeddables</goal>
+                                    <goal>unpack-view-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <storyTimeoutInSecs>1</storyTimeoutInSecs>
+                                    <includes>
+                                        <include>**/stories/*</include>
+                                    </includes>
+                                    <ignoreFailureInStories>false</ignoreFailureInStories>
+                                    <ignoreFailureInView>false</ignoreFailureInView>
+                                    <systemProperties>
+                                        <property>
+                                            <name>java.awt.headless</name>
+                                            <value>true</value>
+                                        </property>
+                                    </systemProperties>
+                                </configuration>
+                            </execution>
+                        </executions>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.springframework.boot</groupId>
+                                <artifactId>spring-boot-starter-logging</artifactId>
+                                <version>${spring-boot.version}</version>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 </project>

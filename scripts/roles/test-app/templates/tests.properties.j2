@@ -1,0 +1,3 @@
+app.host={{ (groups['lb'] | intersect(groups[ vars['target_env'] ]))[0] }}
+app.port={{ lb.port }}
+app.context={{ app.context }}
