@@ -16,6 +16,12 @@
   roles:
   - "app-db"
 
+- hosts: "app"
+  remote_user: "{{ node_management_user }}"
+  sudo: "yes"
+  roles:
+  - "java"
+
 - hosts: "lb"
   remote_user: "{{ node_management_user }}"
   sudo: "yes"
