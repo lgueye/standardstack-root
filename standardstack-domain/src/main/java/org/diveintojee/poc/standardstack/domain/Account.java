@@ -23,6 +23,10 @@ public class Account {
     private LocalDateTime created;
     private LocalDateTime closed;
 
+    public Account() {
+        setCreated(LocalDateTime.now());
+    }
+
     public String getEmail() {
         return email;
     }
