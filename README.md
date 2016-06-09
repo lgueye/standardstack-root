@@ -105,7 +105,7 @@ time ansible-playbook -i /etc/ansible/hosts -e "rev=?? target_env=prod" upgrade-
 time ansible-playbook -i /etc/ansible/hosts -e "rev=?? target_env=prod" upgrade-app.yml
 ```
 
-## [prod][app] upgrade app
+## [management_node] destroy cluster
 ```shell
-time ansible-playbook -i /etc/ansible/hosts -e "rev=?? target_env=prod" destroy-cluster.yml
+time ansible-playbook -i /etc/ansible/hosts destroy-cluster.yml
 ```
