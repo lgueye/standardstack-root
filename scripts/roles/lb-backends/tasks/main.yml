@@ -1,9 +1,0 @@
----
-- name: install fair
-  apt: name="{{ item }}" state="present"
-  with_items:
-    - fair
-
-- name: configure fair communications
-  template: src="fair.conf.j2" dest="/etc/fair.conf"
-

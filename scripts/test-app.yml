@@ -3,4 +3,5 @@
 - hosts: "localhost"
   connection: "local"
   roles:
+  - {role: "inventory"}
   - {role: "test-app"}

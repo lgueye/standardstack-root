@@ -4,4 +4,4 @@ galaxy_info:
   description: An Ansible role for installing utilities.
 
 dependencies:
-  - { role: "security" }
+  - { role: "shared" }

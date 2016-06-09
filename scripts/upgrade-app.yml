@@ -3,6 +3,7 @@
 - hosts: "localhost"
   connection: "local"
   roles:
+  - {role: "inventory"}
   - {role: "clone-app", rev: "{{ rev }}"}
 
 - hosts: "app:&{{ target_env }}"

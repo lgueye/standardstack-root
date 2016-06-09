@@ -4,4 +4,4 @@ galaxy_info:
   description: An Ansible role to generate an initial database dataset (demo purpose only).
 
 dependencies:
-  - { role: "clone-app" }
+  - { role: "shared" }

@@ -13,7 +13,7 @@
   file: state="directory" dest="{{ deploy_dir }}"
   when: {{ require_deployment }}
 - name: "copy {{ appname }}*.jar to {{ deploy_dir }}"
-  copy: src="{{ build_dir }}/target/{{ appname }}-api*.jar" dest="{{ deploy_dir }}/{{ appname }}.jar"
+  copy: src="{{ build_dir }}/target/{{ appname }}-api*.jar" dest="{{ deploy_dir }}/{{ appname }}.jar" mode="u=xrw,g=xr,o=r"
   when: {{ require_deployment }}
 - name: "extrapolate {{ appname }}.conf"
   template: src="{{ appname }}.conf.j2" dest="{{ deploy_dir }}/{{ appname }}.conf"

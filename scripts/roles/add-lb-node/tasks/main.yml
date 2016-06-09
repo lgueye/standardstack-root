@@ -1,7 +1,0 @@
----
-- name: configure fair behavior (back end = transponder)
-  template: src="fair.j2" dest="/etc/default/fair"
-
-# Start fair carrousel
-- name: ensure service is restarted
-  service: name="fair" state="restarted"

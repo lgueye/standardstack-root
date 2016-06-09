@@ -3,6 +3,7 @@
 - hosts: "localhost"
   connection: "local"
   roles:
+  - "inventory"
   - "generate-initial-dataset"
 
 - hosts: "db:&{{ target_env }}"
