@@ -9,6 +9,7 @@ export DO_API_TOKEN=
 ```shell
 time ansible-playbook -i /etc/ansible/hosts -e "rev=" inventory.yml
 ```
+
 ### expected inventory structure
 ```shell
 [test]
@@ -37,6 +38,7 @@ time ansible-playbook -i /etc/ansible/hosts -e "rev=" inventory.yml
 1.1.1.4
 2.2.2.4
 ```
+
 ## [management_node] clone app
 ```shell
 time ansible-playbook -i /etc/ansible/hosts -e "rev=4ba23de234605b204e886b92343e9de6ae04dab2" clone-app.yml
