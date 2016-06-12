@@ -8,22 +8,22 @@
 - hosts: "!localhost"
   remote_user: "root"
   roles:
-  - { role: "security"}
+  - "security"
 
 - hosts: "db"
   remote_user: "{{ node_management_user }}"
-  sudo: "yes"
+  become: "yes"
   roles:
   - "app-db"
 
 - hosts: "app"
   remote_user: "{{ node_management_user }}"
-  sudo: "yes"
+  become: "yes"
   roles:
   - "java"
 
 - hosts: "lb"
   remote_user: "{{ node_management_user }}"
-  sudo: "yes"
+  become: "yes"
   roles:
   - "lb"
