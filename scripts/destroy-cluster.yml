@@ -1,0 +1,12 @@
+---
+
+- hosts: "localhost"
+  connection: "local"
+  roles:
+  - {role: "inventory"}
+
+  tasks:
+  - name: droplets | drop
+    digital_ocean: state="absent" command="droplet" name="{{ item }}" unique_name="yes"
+    with_items: "{{ droplets_names }}"
+    register: droplets
