@@ -8,7 +8,6 @@
 
 - hosts: "db:&{{ target_env }}"
   remote_user: "{{ node_management_user }}"
-  sudo: "yes"
+  become: "yes"
   roles:
   - "apply-initial-dataset"
-
