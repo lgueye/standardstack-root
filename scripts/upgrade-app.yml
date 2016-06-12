@@ -5,6 +5,13 @@
   roles:
   - {role: "inventory"}
   - {role: "clone-app", rev: "{{ rev }}"}
+  vars_files:
+    - roles/shared/vars/main.yml
+  tasks:
+  - name: "resolve file name ignoring version"
+    local_action: "shell ls {{ app.local_app_path }}/target/{{ appname }}-api*.jar"
+    become: no
+    register: file_to_copy
 
 - hosts: "app:&{{ target_env }}"
   remote_user: "{{ node_management_user }}"
@@ -16,11 +23,14 @@
   - name: "check if application is running"
     shell: "netcat -z localhost {{ app.port }}"
     register: "app_running"
-  roles:
-  - {role: "upgrade-app",
-      rev: "{{ rev }}",
-      require_deployment: (app_already_deployed.rc == 0),
-      require_restart: (app_running.rc == 0),
-      lb_excluded_node: "{{ ansible_eth0.ipv4.address }}",
-      deploy_dir: "/tmp/{{ appname }}/{{ rev }}",
-      build_dir: "{{ app.local_app_path }}/target"}
+  - name: "resolve file name ignoring version {{ file_to_copy.stdout_lines[0] }}"
+    debug: var=file_to_copy.stdout_lines
+#  roles:
+#  - {role: "upgrade-app",
+#      rev: "{{ rev }}",
+#      require_deployment: (app_already_deployed.rc == 0),
+#      require_restart: (app_running.rc == 0),
+#      resolved_app: "{{ file_to_copy.stdout_lines[0] }}",
+#      lb_excluded_node: "{{ ansible_eth0.ipv4.address }}",
+#      deploy_dir: "/tmp/{{ appname }}/{{ rev }}",
+#      build_dir: "{{ app.local_app_path }}/target"}
