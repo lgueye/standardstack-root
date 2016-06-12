@@ -62,7 +62,7 @@ http {
 	include /etc/nginx/sites-enabled/*;
 
     upstream {{ appname }} {
-{% for node in groups['app'].remove("{{ lb_excluded_node }}") %}
+{% for node in groups['app'] | difference(["{{ lb_excluded_node }}"]) %}
 		server {{ node }}:{{ app.port }};
 {% endfor %}
     }
