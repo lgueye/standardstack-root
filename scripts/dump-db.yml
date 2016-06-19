@@ -9,7 +9,7 @@
   vars_files:
     - roles/shared/vars/main.yml
   remote_user: "{{ node_management_user }}"
-  sudo: "yes"
+  become: "yes"
   tasks:
   # Copy database dump file to remote host and restore it to database {{app.db.name}}
   - name: "dumping data on {{ source_env }} to {{ dump_filename }}"
@@ -33,7 +33,7 @@
   vars_files:
     - roles/shared/vars/main.yml
   remote_user: "{{ node_management_user }}"
-  sudo: "yes"
+  become: "yes"
   tasks:
   # Copy database dump file to remote host and restore it to database {{app.db.name}}
   - name: "import data on {{ target_env }} from {{ dump_filename }}"
