@@ -14,7 +14,7 @@
 #  when: require_deployment
 
 - name: "copy {{ appname }}*.jar to {{ deploy_dir }}"
-  copy: src="{{ resolved_app }}" dest="{{ deploy_dir }}/{{ appname }}.jar" mode="u=xrw,g=xr,o=r"
+  copy: src="{{ file_to_deploy }}" dest="{{ deploy_dir }}/{{ appname }}.jar" mode="u=xrw,g=xr,o=r"
 #  when: require_deployment
 - name: "extrapolate {{ appname }}.conf"
   template: src="{{ appname }}.conf.j2" dest="{{ deploy_dir }}/{{ appname }}.conf"
@@ -32,7 +32,7 @@
 #  when: require_restart
 - name: "link {{ appname }}*.jar to /etc/init.d/{{appname}}"
   file: state="link" src="{{ deploy_dir }}/{{ appname }}.jar" dest="/etc/init.d/{{ appname }}"
-  when: require_restart
+#  when: require_restart
 
 # start
 - name: "start {{ appname }}"
