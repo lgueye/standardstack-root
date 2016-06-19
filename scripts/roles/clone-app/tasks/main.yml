@@ -4,24 +4,9 @@
   stat: path="{{ app.local_project_path }}"
   register: "target_app_stats"
 
-- name: delete clonedir if needed
-  file: name="{{ app.local_project_path }}" state="absent"
-  when: target_app_stats.stat.exists == true
-
 - name: clone
   git: repo="{{ app.repo }}" dest="{{ app.local_project_path }}" version="{{ rev }}"
+  when: target_app_stats.stat.exists == false
 
 - name: package
   command: mvn clean package -f {{ app.local_project_path }}/pom.xml
-
-#- name: configure api
-#  template: src=api.yml.j2 dest="{{ app.local_app_path }}/target/classes/api.yml"
-#
-#- name: configure log levels
-#  copy: src="logback.xml" dest="{{ app.local_app_path }}/target/classes/logback.xml"
-#
-#- name: configure unix service
-#  template: src="api.sh.j2" dest="{{ app.local_app_path }}/target/classes/{{ appname }}-api.sh" mode="u=xrw,g=xr,o=r"
-#
-#- name: configure tests
-#  template: src="tests.properties.j2" dest="{{ app.local_project_path }}/{{ appname }}-tests/target/classes/{{ appname }}-tests.properties"
