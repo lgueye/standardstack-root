@@ -1,4 +1,4 @@
-LOG_FILENAME={{ appname.log }}
+LOG_FILENAME={{ appname }}.log
 APP_NAME={{ appname }}
-RUN_ARGS=--server.port={{ app.port }} --server.context-path={{ app.context }} --management.port={{ app.management.port }} --spring.datasource.driverClassName={{ app.db.driver }} --spring.datasource.username={{ app.db.user }} --spring.datasource.password={{ app.db.user_password }} --spring.datasource.url=jdbc:mysql://{{ (groups['db'] | intersect(groups[ vars['target_env'] ]))[0] }}:{{ db.port }}/{{ app.db.name }}?autoReconnect=true --spring.jpa.properties.hibernate.dialect={{ app.db.dialect }} --spring.jpa.show-sql={{ app.db.show_sql }}
+RUN_ARGS="--server.port={{ app.port }} --server.context-path={{ app.context }} --management.port={{ app.management.port }} --spring.datasource.driverClassName={{ app.db.driver }} --spring.datasource.username={{ app.db.user }} --spring.datasource.password={{ app.db.user_password }} --spring.datasource.url=jdbc:mysql://{{ (groups['db'] | intersect(groups[ vars['target_env'] ]))[0] }}:{{ db.port }}/{{ app.db.name }}?autoReconnect=true --spring.jpa.properties.hibernate.dialect={{ app.db.dialect }} --spring.jpa.show-sql={{ app.db.show_sql }}"
 
