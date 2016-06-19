@@ -25,10 +25,8 @@ app:
     port: 8081
   logging_file: "/var/log/{{ appname }}-api"
   repo: "https://github.com/lgueye/{{ appname }}-root.git"
-  local_project_path: "/tmp/apps/{{ appname }}-root/{{ rev }}"
-  local_app_path: "/tmp/apps/{{ appname }}-root/{{ rev }}/{{ appname }}-api"
-  node_target_link_path: "/opt/{{ appname }}-api"
-  node_source_link_path: "/opt/java-apps/{{ appname }}-api"
+  local_project_path: "/tmp/{{ appname }}/{{ rev }}"
+  local_app_path: "/tmp/{{ appname }}/{{ rev }}/{{ appname }}-api"
   db:
     user: "{{ appname }}"
     user_password: "{{ db_user_password }}"
@@ -36,7 +34,7 @@ app:
     driver: "com.mysql.jdbc.Driver"
     dialect: "org.hibernate.dialect.MySQL5Dialect"
     show_sql: true
-
+deploy_dir: /opt/{{ appname }}/{{ rev }}
 appname: "standardstack"
 
 lb:
