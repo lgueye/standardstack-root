@@ -56,11 +56,6 @@
                 <version>${spring-boot.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-data-jpa</artifactId>
-                <version>${spring-boot.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>com.fasterxml.jackson.datatype</groupId>
                 <artifactId>jackson-datatype-jsr310</artifactId>
                 <version>${jackson-datatype-jsr310.version}</version>
@@ -230,7 +225,6 @@
                         </execution>
                     </executions>
                     <configuration>
-                        <!--<dotGitDirectory>${project.basedir}/../../.git</dotGitDirectory>-->
                         <verbose>true</verbose>
                         <dateFormat>yyyy-MM-dd'T'HH:mm:ssZ</dateFormat>
                         <generateGitPropertiesFile>true</generateGitPropertiesFile>
