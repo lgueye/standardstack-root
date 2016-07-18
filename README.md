@@ -41,33 +41,33 @@ time ansible-playbook -i /etc/ansible/hosts -e "db_admin_password=$db_admin_pass
 
 ## [management_node] clone app
 <pre><code>
-time ansible-playbook -i /etc/ansible/hosts -e "db_user_password=$db_user_password rev=4ba23de234605b204e886b92343e9de6ae04dab2" scripts/clone-app.yml
+time ansible-playbook -i /etc/ansible/hosts -e "db_user_password=$db_user_password rev=9724b22" scripts/clone-app.yml
 </code></pre>
 
 ## [db] upgrade db
 <pre><code>
-time ansible-playbook -i /etc/ansible/hosts -e "db_admin_password=$db_admin_password db_user_password=$db_user_password rev=4ba23de234605b204e886b92343e9de6ae04dab2 target_env=test" scripts/upgrade-db.yml
-time ansible-playbook -i /etc/ansible/hosts -e "db_admin_password=$db_admin_password db_user_password=$db_user_password rev=4ba23de234605b204e886b92343e9de6ae04dab2 target_env=prod" scripts/upgrade-db.yml
+time ansible-playbook -i /etc/ansible/hosts -e "db_admin_password=$db_admin_password db_user_password=$db_user_password rev=9724b22 target_env=test" scripts/upgrade-db.yml
+time ansible-playbook -i /etc/ansible/hosts -e "db_admin_password=$db_admin_password db_user_password=$db_user_password rev=9724b22 target_env=prod" scripts/upgrade-db.yml
 </code></pre>
 
 ## [prod][db] initial dataset
 <pre><code>
-time ansible-playbook -i /etc/ansible/hosts -e "db_user_password=$db_user_password rev=4ba23de234605b204e886b92343e9de6ae04dab2 target_env=prod" scripts/apply-initial-dataset.yml
+time ansible-playbook -i /etc/ansible/hosts -e "db_user_password=$db_user_password rev=9724b22 target_env=prod" scripts/apply-initial-dataset.yml
 </code></pre>
 
 ## [test][app] upgrade app
 <pre><code>
-time ansible-playbook -i /etc/ansible/hosts -e "db_user_password=$db_user_password rev=4ba23de234605b204e886b92343e9de6ae04dab2 target_env=test" scripts/upgrade-app.yml
+time ansible-playbook -i /etc/ansible/hosts -e "db_user_password=$db_user_password rev=9724b22 target_env=test" scripts/upgrade-app.yml
 </code></pre>
 
 ## [test][management_node] test app
 <pre><code>
-time ansible-playbook -i /etc/ansible/hosts -e "db_user_password=$db_user_password rev=4ba23de234605b204e886b92343e9de6ae04dab2 target_env=test" scripts/test-app.yml
+time ansible-playbook -i /etc/ansible/hosts -e "db_user_password=$db_user_password rev=9724b22 target_env=test" scripts/test-app.yml
 </code></pre>
 
 ## [prod][app] upgrade app
 <pre><code>
-time ansible-playbook -i /etc/ansible/hosts -e "db_user_password=$db_user_password rev=4ba23de234605b204e886b92343e9de6ae04dab2 target_env=prod" scripts/upgrade-app.yml
+time ansible-playbook -i /etc/ansible/hosts -e "db_user_password=$db_user_password rev=9724b22 target_env=prod" scripts/upgrade-app.yml
 </code></pre>
 
 ## push new changes here !
